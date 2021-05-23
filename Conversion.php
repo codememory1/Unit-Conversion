@@ -3,6 +3,8 @@
 namespace Codememory\Components\UnitConversion;
 
 use Codememory\Components\UnitConversion\Units\AbstractUnit;
+use Codememory\Support\Str;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * Class Conversion
@@ -27,6 +29,16 @@ class Conversion
      * @var float|int
      */
     private float|int $convertibleNumber = 0;
+
+    /**
+     * @var string|null
+     */
+    private ?string $currentUnit = null;
+
+    /**
+     * @var AbstractUnit|null
+     */
+    private ?AbstractUnit $convertible = null;
 
     /**
      * =>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>
@@ -55,12 +67,43 @@ class Conversion
      *
      * @param AbstractUnit $unit
      *
-     * @return AbstractUnit
+     * @return Conversion
      */
-    public function from(AbstractUnit $unit): AbstractUnit
+    public function from(AbstractUnit $unit): Conversion
     {
 
-        return $unit->setConvertibleNumber($this->convertibleNumber);
+        $this->convertible = $unit->setConvertibleNumber($this->convertibleNumber);
+
+        return $this;
+
+    }
+
+    /**
+     * @param string|null $constant
+     *
+     * @return int|float
+     */
+    public function get(?string $constant = null): int|float
+    {
+
+        $this->currentUnit = $constant;
+
+        return call_user_func([$this->convertible, null === $this->currentUnit ? self::CURRENT : $this->currentUnit]);
+
+    }
+
+    /**
+     * @return string
+     */
+    #[Pure]
+    public function getCurrentUnit(): string
+    {
+
+        if (null === $this->currentUnit) {
+            return 'B';
+        }
+
+        return Str::toUppercase(mb_substr($this->currentUnit, 3));
 
     }
 

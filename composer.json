@@ -8,7 +8,10 @@
             "email": "kostynd1@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "codememory/support": "^1.2",
+        "ext-mbstring": "*"
+    },
     "autoload": {
         "psr-4": {
             "Codememory\\Components\\UnitConversion\\": ""
